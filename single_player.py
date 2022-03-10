@@ -51,7 +51,7 @@ def run(rows, columns, square_size=4):
                     #end_game()
                     running = False
 
-            if state[snake.body[0][0], snake.body[0][1]] == -1:
+            if state[snake.body[0][0], snake.body[0][1]] == -5:
                 print("You went off the edge!!!")
                 running = False
 

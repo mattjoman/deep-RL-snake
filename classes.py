@@ -5,7 +5,7 @@ import random
 
 class Snake():
     def __init__(self):
-        self.direction = 'd'
+        self.direction = 3
         self.body = [[3, 3]]
         self.apple = False
 
@@ -13,11 +13,11 @@ class Snake():
         return
 
     def add_to_body(self):
-        if self.direction == 'u':
+        if self.direction == 2:
             new_head = [self.body[0][0] - 1, self.body[0][1]]
-        elif self.direction == 'd':
+        elif self.direction == 3:
             new_head = [self.body[0][0] + 1, self.body[0][1]]
-        elif self.direction == 'l':
+        elif self.direction == 0:
             new_head = [self.body[0][0], self.body[0][1] - 1]
         else:
             new_head = [self.body[0][0], self.body[0][1] + 1]
@@ -44,13 +44,13 @@ class Snake():
 class Player(Snake):
     def set_direction(self, keys):
         if keys[pygame.K_LEFT]:
-            self.direction = 'l'
+            self.direction = 0 # left
         elif keys[pygame.K_RIGHT]:
-            self.direction = 'r'
+            self.direction = 1 # right
         elif keys[pygame.K_UP]:
-            self.direction = 'u'
+            self.direction = 2 # up
         elif keys[pygame.K_DOWN]:
-            self.direction = 'd'
+            self.direction = 3 # down
         return
 
 
