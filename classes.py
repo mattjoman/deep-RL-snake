@@ -5,9 +5,8 @@ import random
 
 class Snake():
     def __init__(self):
-        self.direction = 'u'
-        #self.body = [[50, 50], [51, 50], [52, 50], [53, 50], [54, 50], [55, 50], [56, 50], [57, 50], [58, 50], [59, 50], [60, 50], [61, 50]]
-        self.body = [[50, 50]]
+        self.direction = 'd'
+        self.body = [[3, 3]]
         self.apple = False
 
     def set_direction(self):
