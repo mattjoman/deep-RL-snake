@@ -56,4 +56,4 @@ def run(rows, columns, square_size=4):
                 running = False
 
         pygame.display.update()
-        clock.tick(20)
+        clock.tick()

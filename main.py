@@ -1,7 +1,7 @@
 def main():
 
-    rows = 60
-    columns = 60
+    rows = 20
+    columns = 20
     square_size = 12
 
     print()
@@ -12,7 +12,8 @@ def main():
 
     if mode == '':
         import single_player as sp
-        sp.run(rows, columns, square_size)
+        while True:
+            sp.run(rows, columns, square_size)
 
     elif mode == '1':
         import train_ai as ta
