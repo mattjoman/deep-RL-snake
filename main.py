@@ -1,8 +1,11 @@
+from single_player import single_player
+from train_ai import train_ai
+
 def main():
 
     rows = 20
     columns = 20
-    square_size = 12
+    square_size = 16
 
     print()
     print("Blank: Single Player")
@@ -11,13 +14,11 @@ def main():
     mode = input("Enter a number to choose the game mode: ")
 
     if mode == '':
-        import single_player as sp
         while True:
-            sp.run(rows, columns, square_size)
+            single_player(rows, columns, square_size)
 
     elif mode == '1':
-        import train_ai as ta
-        ta.run(rows, columns, square_size)
+        train_ai(rows=10, columns=10, square_size=square_size)
 
 
 if __name__ == "__main__":

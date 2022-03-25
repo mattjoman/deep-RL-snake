@@ -12,17 +12,18 @@ def new_state(rows, columns):
     return state
 
 
-def update_state(snake_list, apple, rows, columns):
+def update_state(snake, apple, rows, columns):
     state = new_state(rows, columns)
-    for snake in snake_list:
-        # head
-        if state[snake.body[0][0], snake.body[0][1]] == -5:
-            pass # don't overwrite the edge with the snake head
-        else:
-            state[snake.body[0][0], snake.body[0][1]] = -2
-        # rest of body
-        for b in snake.body[1:]:
-            state[b[0], b[1]] = -3
+    #for snake in snake_list:
+
+    # head
+    if state[snake.body[0][0], snake.body[0][1]] == -5:
+        pass # don't overwrite the edge with the snake head
+    else:
+        state[snake.body[0][0], snake.body[0][1]] = -2
+    # rest of body
+    for b in snake.body[1:]:
+        state[b[0], b[1]] = -3
 
     state[apple.loc[0], apple.loc[1]] = 5
     return state

@@ -59,11 +59,8 @@ class Snake():
         self.direction = 3
         self.init_body(rows, columns)
         self.apple = False
-        self.init_score()
-        self.init_timestep_counter()
-
-    def set_direction(self):
-        return
+        self.score = 0
+        self.timestep_counter = 0
 
     def add_to_body(self):
         if self.direction == 2:
@@ -104,8 +101,8 @@ class Snake():
         return
 
     def init_body(self, rows, columns):
-        # make start location random
-        self.body = [[np.random.random_integers(1, rows-2), np.random.random_integers(1, columns-2)]]
+        self.body = [[np.random.randint(1, rows-1), np.random.randint(1, columns-1)]]
+        return
 
 
 
@@ -140,11 +137,12 @@ class AI(Snake):
         self.game_count = 0
 
     def set_direction(self, state):
-        Q_vals = self.get_Q_vals(state)
+        Q_vals = self.Q_net.forward(torch.from_numpy(state))
         self.direction, _ = self.select_action(Q_vals)
         return
 
     def select_action(self, Q_vals):
+        """ Returns the action selected and Q vals for each action """
         max_ = Q_vals.max().item()
         for i in range(4):
             if Q_vals[0][i].item() == max_:
@@ -156,12 +154,6 @@ class AI(Snake):
         else:
             return np.random.random_integers(0, 3), Q_vals[0][i].item()
 
-    def get_Q_vals(self, state, rows=10, columns=10):
-        return self.Q_net.forward(torch.from_numpy(state))
-
-    def get_target_Q_vals(self, state, rows=10, columns=10):
-        return self.target_Q_net.forward(torch.from_numpy(state))
-
     def learn_from_mem(self):
         if self.timestep_counter % 5 == 0:
             self.target_Q_net = self.Q_net
@@ -169,31 +161,24 @@ class AI(Snake):
         if len(self.replay_mem) < self.batch_size:
             return
 
-        #cum_loss = 0
         for b in range(self.batch_size):
 
-            # select the memory
             mem = self.select_mem()
 
-            # get reward for this transition
             reward = mem[2]
 
-            Q_0_vals = self.get_Q_vals(mem[0])
-            Q_1_vals = self.get_target_Q_vals(mem[3])
+            Q_0_vals = self.Q_net.forward(torch.from_numpy(mem[0]))
+            Q_1_vals = self.target_Q_net.forward(torch.from_numpy(mem[3]))
 
-            Q_0 = Q_0_vals[0][mem[1]] # get Q val for the action taken
+            Q_0 = Q_0_vals[0][mem[1]]       # get Q val for the action taken
             Q_1 = Q_1_vals.max().detach()   # get the maximum Q val for the next state
 
-            # need Q_0 and Q_1 to be tensors?
             loss = F.smooth_l1_loss(Q_0, (self.gamma * Q_1) + reward)
-            #cum_loss += loss.item()
             self.Q_net.optimiser.zero_grad()
             loss.backward()
-            #print(); print(); print()
             for param in self.Q_net.parameters():
-                param.grad.data.clamp_(-1, 1)
+                param.grad.data.clamp_(-1, 1) # do we need to clamp?
             self.Q_net.optimiser.step()
-        #print(cum_loss/64)
         return
 
     def update_replay_mem(self, s0, a0, r, s1):
@@ -217,14 +202,11 @@ class Apple():
         self.set_loc(rows, columns)
 
     def set_loc(self, rows, columns):
-        #self.loc = [random.randint(1, rows-2), random.randint(1, columns-2)]
-        self.loc = [5, 5]
+        self.loc = [random.randint(1, rows-2), random.randint(1, columns-2)]
         return
 
 
 if __name__ == "__main__":
-    """
-    """
     ai = AI()
     state = np.random.rand(20, 20)
     ai.set_direction(state)
